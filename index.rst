@@ -2,6 +2,14 @@
 
 .. Please do not modify tocdepth; will be fixed when a new Sphinx theme is shipped.
 
+.. note::
+  This document describes the procedure used to measure the look-up
+  table for the Auxiliary Telescope primary mirror support pressure
+  as a function of elevation. We start with a description of the
+  support system and the software used to control it. The data
+  acquisition process is described along with the fit to the data
+  and loading the results into the active optics system.
+
 .. sectnum::
 
 Introduction
