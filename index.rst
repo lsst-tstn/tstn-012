@@ -4,16 +4,6 @@
 
 .. sectnum::
 
-.. note::
-
-   This document describes the procedure used to measure the look-up table for
-   the Auxiliary Telescope primary mirror support pressure as a function of
-   elevation. We start with a description of the support system and the
-   software used to control it. The data acquisition process is described
-   along with the fit to the data and loading the results into the active
-   optics system.
-
-
 Introduction
 ============
 
@@ -23,10 +13,12 @@ that regulates pressure on the line, which is uniformly distributed between
 each element.
 
 When pressure in the pneumatic system is turned off the mirror sits in the
-3 hard points. This will end up distorting the shape of the mirror causing
-considerable image aberration. The pneumatic system can provide additional
-support to the mirror, spreading the load over its back surface, mitigating
-the problem.
+3 hard points. One of the hard points (a.k.a. the load cell) contain a "digital
+scale" that measures the load (how much weight) it supports.
+With the mirror supported by the 3 hard points distort the shape of the mirror
+resulting in considerable image aberration. The pneumatic system can provide
+additional support to the mirror, spreading the load over its back surface,
+mitigating the problem.
 
 With different elevation angles, the normal support force on the mirror change,
 decreasing as elevation decreases. This means that the pressure on the
@@ -38,13 +30,12 @@ the pressure to deviate somewhat for a simple linear relation requiring
 higher-order terms to account for systematics in the hardware.
 
 There are 3 components that work together to account for this effect in the
-Auxiliary Telescope; ATPneumatics, ATAOS and ATMCS.
+Auxiliary Telescope (AT); ATPneumatics, AT Active Optics System (ATAOS) and
+AT Mount Control System (ATMCS).
 
 The ATPneumatics is the component is charge of regulating the pressure for the
-pneumatics actuators. It is important to keep a couple things in mind when it
-comes to how this component works. To start with, it is not possible to set
-the pressure to zero. There are 3 valves involved when it comes to setting the
-M1 support pressure; master air supply, instrument air supply and M1 air
+pneumatics actuators. There are 3 valves involved when it comes to setting the
+M1 support pressure: master air supply, instrument air supply and M1 air
 valves. Once all 3 valves are opened there will a small back pressure applied
 to M1 even if it is commanded to zero. It is important to have that in mind
 since it will impact the way we measure the optimum pressure.
@@ -75,10 +66,11 @@ Measuring optimum M1 support pressure for different elevations
    M1 valve in the ATPneumatics, slew the telescope to the park position
    (:math:`\mathrm{elevation} = 86^\circ`), and restart the process.
 
-As mentioned above, the support system contain 3 hard points and 21 actuators,
-all have the same contact area with the mirror. One of the hard points (the
-load cell) contain a "digital scale" that measures the load (how much weight)
-it is supporting.
+As mentioned above, the support system contains 3 hard points and 21 actuators,
+all have the same contact area with the mirror. The total mirror weight is
+:math:`800lb` (:math:`\sim 362.9kg`). Nevertheless, as it is possible to note
+furthermore, we developed a procedure that does not require knowing the total
+weight of the mirror, using the load cell to measure the supporting weight.
 
 In principle, to minimize distortion in the mirror shape we must make sure
 the load is evenly distributed between all the 24 actuators. The first step in
@@ -104,18 +96,18 @@ Assuming a lower and upper limit for the pressure of :math:`P_{min}` and
 :math:`P_{max}`, the binary search for the optimum pressure is as follows:
 
    1. Set pressure to zero (:math:`P=0`) and measure load to determine
-   :math:`\mathrm{optimum\_load}` using equation :eq:`eq-optimum-load`.
+      :math:`\mathrm{optimum\_load}` using equation :eq:`eq-optimum-load`.
 
    2. Set pressure to :math:`P=P_{min}` and measure the load in the load cell.
 
-      1. If the load is lower than the optimum load, it means the minimum
-      pressure is larger than the optimum value. The process is terminated.
+      - If the load is lower than the optimum load, it means the minimum
+        pressure is larger than the optimum value. The process is terminated.
 
    3. Set pressure to :math:`P=P_{max}` and measure the load in the load cell.
 
-      1. If the load is larger than the optimum load, it means the maximum
-      pressure is lower than the optimum value, e.g. maximum was not correctly
-      measured. The process is terminated.
+      - If the load is larger than the optimum load, it means the maximum
+        pressure is lower than the optimum value, e.g. maximum was not correctly
+        measured. The process is terminated.
 
    4. Compute the mid-pressure point :math:`P_{set}=(P_{min}+P_{max})/2.`.
 
@@ -123,13 +115,13 @@ Assuming a lower and upper limit for the pressure of :math:`P_{min}` and
 
    6. Measure the mid-pressure load.
 
-      1. If the mid-pressure load is larger than the optimum load,
-      set :math:`P_{max} = P_{set}`.
-      2. If the mid-pressure load is lower than the optimum load,
-      set :math:`P_{min} = P_{set}`.
+      - If the mid-pressure load is larger than the optimum load,
+        set :math:`P_{max} = P_{set}`.
+      - If the mid-pressure load is lower than the optimum load,
+        set :math:`P_{min} = P_{set}`.
 
    7. Repeat steps 4, 5 and 6 until the relative difference between the
-   mid-pressure load and the optimum load is smaller then 1%.
+      mid-pressure load and the optimum load is smaller then 1%.
 
 Before running this process for a range of elevations we need to define a
 reliable procedure to determine the initial minimum and maximum pressures. For
@@ -168,13 +160,13 @@ in :numref:`fig-pressure-elevation`.
 
    **Upper panel:** Data for the optimum M1 support pressure vs. elevation
    (blue dots) alongside a linear and a 7th-order polynomial fit with the
-   normal gravity vector. **Lower panel:** Residue when using the linear (solid
-   blue line) and the 7th-order (solid orange line) polynomial fit.
+   normal gravity vector. **Lower panel:** Residuals when using the linear
+   (solid blue line) and the 7th-order (solid orange line) polynomial fit.
 
 In the bottom panel of :numref:`fig-pressure-elevation` we show the residue of
 linear and 7th-order (solid orange line) polynomial fit. It is clear that there
-are systematic residue in the linear fit. We increased the order of the fit
-until the residues was satisfactorily. Since there are no apparent small scale
+are systematic residuals in the linear fit. We increased the order of the fit
+until the residual was satisfactorily. Since there are no apparent small scale
 structures we are not particularly worried about overfitting the data.
 
 The output of the fit is shown in :numref:`table-fit-coeff`.
@@ -217,8 +209,11 @@ It starts by cloning the
 
 
 Create a ticket branch in the repo and create the file `hex_m1_hex_202003.yaml`
-to host the configuration in the ATAOS configuration host in `ATAOS/v2`. Add
-the data in the third column of :numref:`table-fit-coeff` into the m1 session
+to host the configuration in the ATAOS configuration host in `ATAOS/v2`. Here
+we choose to add only year and month to the name of the configuration file.
+In case multiple configurations are generated over the course of a run, one
+can think about appending a day and even an index to the file name.
+Add the data in the third column of :numref:`table-fit-coeff` into the m1 session
 of the file.
 
 It is also important to edit the `_labels.yaml` file in the package and make

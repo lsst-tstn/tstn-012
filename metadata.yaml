@@ -40,11 +40,14 @@ copyright: "2020, Association of Universities for Research in Astronomy, Inc. (A
 description: "This document describes the process used to create the primary mirror look up table."
 
 # Abstract, if available
-# abstract: >
-#           Write your paragraph
-#           here with multiple lines.
-#
-#           You can have multiple paragraphs too.
+abstract: >
+  This document describes the procedure used to measure the look-up
+  table for the Auxiliary Telescope primary mirror support pressure
+  as a function of elevation. We start with a description of the
+  support system and the software used to control it. The data
+  acquisition process is described along with the fit to the data
+  and loading the results into the active optics system.
+
 
 # URL where this document is published by Read the Docs. e.g. http://sqr-001.lsst.codes
 url: "https://tstn-012.lsst.io"
